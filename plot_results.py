@@ -53,8 +53,8 @@ args = arg_pass.parse_args()
 Env= args.Env
 Input_file_dir= args.input_dir
 Save_fig_dir= args.save_dir
-O_RT = args.O_RT
-O_RA = args.O_RA
+O_RT = args.O_RT[0]
+O_RA = args.O_RA[0]
 
 print ('Env:', Env, '\nInput_file_dir:', Input_file_dir, '\nSave_fig_dir:', 
        Save_fig_dir, '\nShow O_RT:', O_RT, '\nShow O_RA:', O_RA)
