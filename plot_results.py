@@ -6,22 +6,59 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
+import argparse
+import pathlib
 np.set_printoptions(precision=3, suppress=True)
 
-Env= sys.argv[1]
-Input_file_dir= sys.argv[2]
-Save_fig_dir= sys.argv[3]
-O_RT = float(sys.argv[4]) 
-O_RA = float(sys.argv[5])
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+        
+arg_pass=argparse.ArgumentParser()
+arg_pass.add_argument(
+  "--Env",
+  help='Env name; default RW',
+  default='RW', 
+)
+arg_pass.add_argument(
+  "--input_dir",
+  help='Input file directory',  
+)
+arg_pass.add_argument(
+  "--save_dir",
+  help='Save plots directory; default ./Results/RandomWalk/',  
+  default='./Results/RandomWalk/',
+)
+arg_pass.add_argument(
+  "--O_RT",
+  nargs='*', help='Plot O_RT; default False',
+  type=str2bool, 
+  default=False,
+)
+arg_pass.add_argument(
+  "--O_RA",
+  nargs='*', help='Plot O_RA; default False',
+  type=str2bool,  
+  default=False,
+)
 
-# Env='RW'
-# Input_file_dir='/cephyr/users/alibe/Alvis/KDD2022/main/Results/RandomWalk/RW_s33_r100_e500.csv'
-# Save_fig_dir='./Results/RandomWalk/'
-# O_RT=1
-# O_RA=0
+args = arg_pass.parse_args()
+
+Env= args.Env
+Input_file_dir= args.input_dir
+Save_fig_dir= args.save_dir
+O_RT = args.O_RT
+O_RA = args.O_RA
 
 print ('Env:', Env, '\nInput_file_dir:', Input_file_dir, '\nSave_fig_dir:', 
        Save_fig_dir, '\nShow O_RT:', O_RT, '\nShow O_RA:', O_RA)
+
 
 def RW_plot(input_file_dir, save_fig_dir, o_RT, o_RA):
     with open(input_file_dir, newline='') as f:
@@ -53,9 +90,9 @@ def RW_plot(input_file_dir, save_fig_dir, o_RT, o_RA):
         print('Warning: There are no Only R_T Results in inserted address')
     if ra.size == 0:
         print('Warning: There are no Only R_A Results in inserted address')
-    if o_RT==1 and (not rt.size == 0):
+    if o_RT and (not rt.size == 0):
         plt.plot(rt[:,3], rt[:,5],'.', label=r'Only $R^T$ (Baseline)',linewidth=3, c='k')
-    if o_RA==1 and (not ra.size == 0):
+    if o_RA and (not ra.size == 0):
         plt.plot(ra[:,3], ra[:,5],'-.', label=r'Only $R^A$',linewidth=3, c='gray') 
     for i in range(int(len(ta)/episode)):
         plt.plot(ta[i*episode:(i+1)*episode ,3], ta[i*episode:(i+1)*episode ,5], 
@@ -83,7 +120,7 @@ def RW_plot(input_file_dir, save_fig_dir, o_RT, o_RA):
     plt.rcParams.update({'font.size': 15})
     plt.savefig(save_fig_dir+name+'beta.png', dpi=144, format=None, metadata=None, bbox_inches=None, 
                 pad_inches=0.1, facecolor='auto', edgecolor='auto',backend=None)  
+    print("The figures saved in:"+save_fig_dir+name+'.png and ' +save_fig_dir+name+'beta.png')
 
 if Env=='RW':
     RW_plot(input_file_dir=Input_file_dir, save_fig_dir=Save_fig_dir,o_RT=O_RT,o_RA=O_RA)
-
