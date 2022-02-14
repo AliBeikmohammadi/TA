@@ -1,4 +1,4 @@
 # TA
-Teaching Assistant: A Framework for Faster Learning the Task in Reinforcement Learning
+TA-Explore: Teacher-Assisted Exploration for Facilitating Fast Reinforcement Learning
 
-KDD
+KDD2022
