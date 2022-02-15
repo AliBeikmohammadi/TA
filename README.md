@@ -5,7 +5,7 @@ Implementation of **TA-Explore**, as presented in TA-Explore: Teacher-Assisted E
 
 # Importing
 
-´´´
+```
 import sys
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' # -1:cpu, 0:first gpu
@@ -24,8 +24,9 @@ from tensorflow.keras.optimizers import Adam, RMSprop, Adagrad, Adadelta
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras import backend as K
-´´´
-´´´
+```
+
+```
 import sys
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' # -1:cpu, 0:first gpu
@@ -44,8 +45,8 @@ from tensorflow.keras.optimizers import Adam, RMSprop, Adagrad, Adadelta
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras import backend as K
-´´´
-´´´
+```
+```
 import sys
 import os
 import numpy as np
@@ -53,8 +54,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
 import pathlib
-´´´
-´´´
+```
+```
 import sys
 import os
 import numpy as np
@@ -63,7 +64,7 @@ import matplotlib.pyplot as plt
 import csv
 import argparse
 import pathlib
-´´´
+```
 
 # Usage
 ## How to Plot the Results
