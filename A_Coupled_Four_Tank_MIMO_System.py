@@ -403,7 +403,7 @@ class PPOAgent:
 #                     self.writer.add_scalar(f'Workers:{1}/learning_rate', self.lr, self.episode)
 #                     self.writer.add_scalar(f'Workers:{1}/average_score',  average, self.episode)
 #                     self.writer.add_scalar(f'Workers:{1}/o_average_score',  o_average, self.episode)       
-                    results.append([self.a0, self.initial_beta, self.cut, self.episode+1, max((self.cut-self.episode)*self.initial_beta/self.cut,0), o_average])         
+                    results.append([self.a0, self.initial_beta, self.cut, self.episode, max((self.cut-self.episode)*self.initial_beta/self.cut,0), o_average])         
                     state, done, score, SAVING = self.env.reset(), False, 0, ''
                     o_score, o_SAVING = 0, ''
                     state = np.reshape(state, [1, self.state_size[0]])
