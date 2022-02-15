@@ -1,7 +1,7 @@
 # TA-Explore
 Implementation of **TA-Explore**, as presented in TA-Explore: Teacher-Assisted Exploration for Facilitating Fast Reinforcement Learning.
 
-KDD2022
+*Submitted to the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (SIGKDD2022)
 
 # Importing
 
@@ -127,4 +127,13 @@ python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 0 --E 4000 --
 ```
 python A_Coupled_Four_Tank_MIMO_System.py --e 30000 --b 0.5 --E 3000 --w 1 --d False --save_dir ./Results/Four_Tank/
 python A_Coupled_Four_Tank_MIMO_System.py --e 30000 --b 0 --E 3000 --w 1 --d False --save_dir ./Results/Four_Tank/
+```
+
+# Citation
+* Submitted to the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining
+* Washington DC Convention Center August 14-18, 2022
+
+Please cite the accompanied paper, if you find this useful:
+```
+To be completed
 ```
