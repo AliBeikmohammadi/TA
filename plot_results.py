@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+
 import sys
 import os
 import numpy as np
@@ -23,12 +24,23 @@ def str2bool(v):
 arg_pass=argparse.ArgumentParser()
 arg_pass.add_argument(
   "--Env",
-  help='Env name; default RW',
+  help='Env name; default RW - RW:RandomWalk, TC: Temperature Control, FT: Four Tank',
   default='RW', 
 )
 arg_pass.add_argument(
   "--input_dir",
-  help='Input file directory',  
+  help='Input file directory; default./Results/RandomWalk/RW_s5_r100_e100.csv',
+  default='./Results/RandomWalk/RW_s5_r100_e100.csv',
+)
+arg_pass.add_argument(
+  "--TA_dir",
+  help='TA-explore file directory; default ./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta1_E4000.csv',
+  default='./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta1_E4000.csv',
+)
+arg_pass.add_argument(
+  "--baseline_dir",
+  help='Baseline file directory; default ./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta0_E4000.csv',
+  default='./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta0_E4000.csv',
 )
 arg_pass.add_argument(
   "--save_dir",
@@ -48,17 +60,28 @@ arg_pass.add_argument(
   default=False,
 )
 
+arg_pass.add_argument(
+  "--x_min",
+   help='lower bound xlim; default 0',
+  type=int,  
+  default=0,
+)
+arg_pass.add_argument(
+  "--x_max",
+   help='upper bound xlim; default 8000',
+  type=int,  
+  default=8000,
+)
 args = arg_pass.parse_args()
-
 Env= args.Env
 Input_file_dir= args.input_dir
+Baseline_dir= args.baseline_dir
+TA_DIR= args.TA_dir
 Save_fig_dir= args.save_dir
 O_RT = args.O_RT[0]
 O_RA = args.O_RA[0]
-
-print ('Env:', Env, '\nInput_file_dir:', Input_file_dir, '\nSave_fig_dir:', 
-       Save_fig_dir, '\nShow O_RT:', O_RT, '\nShow O_RA:', O_RA)
-
+X_min= args.x_min
+X_max= args.x_max
 
 def RW_plot(input_file_dir, save_fig_dir, o_RT, o_RA):
     with open(input_file_dir, newline='') as f:
@@ -114,13 +137,93 @@ def RW_plot(input_file_dir, save_fig_dir, o_RT, o_RA):
         plt.plot(ta[i*episode:(i+1)*episode ,3], ta[i*episode:(i+1)*episode ,4], 
                  label=r'$\beta(0)= {}, λ = {}$'.format(ta[i*episode,1], ta[i*episode,2]),linewidth=3)  
     plt.xlabel('Episodes')
-    plt.ylabel(r'$\beta(t)$')
+    plt.ylabel(r'$\beta(e)$')
     plt.legend()
-    plt.title(r'$\beta(t) = \beta(0)\lambda^{e}$ for Random Walk')
+    plt.title(r'$\beta(e) = \beta(0)\lambda^{e}$ for Random Walk')
     plt.rcParams.update({'font.size': 15})
     plt.savefig(save_fig_dir+name+'beta.png', dpi=144, format=None, metadata=None, bbox_inches=None, 
                 pad_inches=0.1, facecolor='auto', edgecolor='auto',backend=None)  
     print("The figures saved in:"+save_fig_dir+name+'.png and ' +save_fig_dir+name+'beta.png')
 
-if Env=='RW':
+
+def TC_plot(baseline_dir,TA_dir, save_fig_dir, x_min, x_max):
+    name=TA_dir.split("/")[-1][:-4]
+    isExist = os.path.exists(save_fig_dir)
+    if not isExist:
+        os.makedirs(save_fig_dir)
+    omega=name.split("_")[3][5:]
+    dfb = pd.read_csv(baseline_dir)
+    dfr = pd.read_csv(TA_dir)
+    plt.figure(figsize=[10, 5], dpi=72)
+    ax = plt.gca()
+
+    dfb.plot(x="episode", y="average R^T",ax=ax,label=r'Only $R^T$ (Baseline)', linewidth=3, c='k')
+    dfr.plot(x="episode", y="average R^T",ax=ax, label='TA-Explore',linewidth=3, c='red')
+    plt.title(r'Optimal Temperate Control with Constraint (${}\Vert a\Vert ^2$)'.format(omega))
+    plt.ylabel('Average Reward $R^T$')
+    plt.xlabel('Episodes')
+    plt.xlim((x_min, x_max)) 
+    plt.rcParams.update({'font.size': 15})
+    plt.savefig(save_fig_dir+name+'.png', dpi=144, format=None, metadata=None, bbox_inches=None, pad_inches=0.1,
+            facecolor='auto', edgecolor='auto', backend=None)
+
+    plt.figure(figsize=[10, 5], dpi=72)
+    ax = plt.gca()
+    dfb.plot(x="episode", y="beta",ax=ax,label=r'Only $R^T$ (Baseline)', linewidth=3, c='k')
+    dfr.plot(x="episode", y="beta",ax=ax, label='TA-Explore',linewidth=3, c='red')
+    plt.title(r'$\beta(e) = max[(E-e)\beta(0)/E,0]$ for Optimal Temperate Control with Constraint')
+    plt.xlabel('Episodes')
+    plt.ylabel(r'$\beta(e)$')
+    plt.rcParams.update({'font.size': 15})
+    plt.savefig(save_fig_dir+name+'beta.png', dpi=144, format=None, metadata=None, bbox_inches=None, 
+                    pad_inches=0.1, facecolor='auto', edgecolor='auto',backend=None)  
+    print("The figures saved in:"+save_fig_dir+name+'.png and ' +save_fig_dir+name+'beta.png')
+
+
+def FT_plot(baseline_dir,TA_dir, save_fig_dir, x_min, x_max):
+    name=TA_dir.split("/")[-1][:-4]
+    isExist = os.path.exists(save_fig_dir)
+    if not isExist:
+        os.makedirs(save_fig_dir)
+    omega=name.split("_")[3][5:]
+    dfb = pd.read_csv(baseline_dir)
+    dfr = pd.read_csv(TA_dir)
+    plt.figure(figsize=[10, 5], dpi=72)
+    ax = plt.gca()
+
+    dfb.plot(x="episode", y="average R^T",ax=ax,label=r'Only $R^T$ (Baseline)', linewidth=3, c='k')
+    dfr.plot(x="episode", y="average R^T",ax=ax, label='TA-Explore',linewidth=3, c='red')
+    plt.title(r'Coupled Four Tank MIMO System (${}\Vert a\Vert ^2$)'.format(omega))
+    plt.ylabel('Average Reward $R^T$')
+    plt.xlabel('Episodes')
+    plt.xlim((x_min, x_max)) 
+    plt.rcParams.update({'font.size': 15})
+    plt.savefig(save_fig_dir+name+'.png', dpi=144, format=None, metadata=None, bbox_inches=None, pad_inches=0.1,
+            facecolor='auto', edgecolor='auto', backend=None)
+
+    plt.figure(figsize=[10, 5], dpi=72)
+    ax = plt.gca()
+    dfb.plot(x="episode", y="beta",ax=ax,label=r'Only $R^T$ (Baseline)', linewidth=3, c='k')
+    dfr.plot(x="episode", y="beta",ax=ax, label='TA-Explore',linewidth=3, c='red')
+    plt.title(r'$\beta(e) = max[(E-e)\beta(0)/E,0]$ for Coupled Four Tank MIMO System')
+    plt.xlabel('Episodes')
+    plt.ylabel(r'$\beta(e)$')
+    plt.rcParams.update({'font.size': 15})
+    plt.savefig(save_fig_dir+name+'beta.png', dpi=144, format=None, metadata=None, bbox_inches=None, 
+                    pad_inches=0.1, facecolor='auto', edgecolor='auto',backend=None)  
+    print("The figures saved in:"+save_fig_dir+name+'.png and ' +save_fig_dir+name+'beta.png')
+
+if Env=='RW' or Env=='RandomWalk':
+    print ('Env:', Env, '\nInput_file_dir:', Input_file_dir, '\nSave_fig_dir:', 
+       Save_fig_dir, '\nShow O_RT:', O_RT, '\nShow O_RA:', O_RA)
     RW_plot(input_file_dir=Input_file_dir, save_fig_dir=Save_fig_dir,o_RT=O_RT,o_RA=O_RA)
+
+if Env=='TC'or Env=='Temperate_Control':
+    print ('Env:', Env, '\nBaseline_dir:', Baseline_dir, '\nTA_DIR:', 
+       TA_DIR, '\nSave_fig_dir:', Save_fig_dir, '\nX_lim: [', X_min, X_max, ']')
+    TC_plot(baseline_dir=Baseline_dir,TA_dir=TA_DIR, save_fig_dir=Save_fig_dir, x_min=X_min, x_max=X_max)
+    
+if Env=='FT'or Env=='Four_Tank':
+    print ('Env:', Env, '\nBaseline_dir:', Baseline_dir, '\nTA_DIR:', 
+       TA_DIR, '\nSave_fig_dir:', Save_fig_dir, '\nX_lim: [', X_min, X_max, ']')
+    FT_plot(baseline_dir=Baseline_dir,TA_dir=TA_DIR, save_fig_dir=Save_fig_dir, x_min=X_min, x_max=X_max)
