@@ -1,8 +1,14 @@
 # TA-Explore
 Implementation of **TA-Explore**, as presented in TA-Explore: Teacher-Assisted Exploration for Facilitating Fast Reinforcement Learning.
+
 KDD2022
 
+# Importing
+
+# Usage
 ## How to Plot the Results
+
+> The script below is used to draw output figures with the desired features.
 ```
 python plot_results.py -h
 
@@ -24,7 +30,8 @@ optional arguments:
   --x_max X_MAX         upper bound xlim; default 8000
 ```
 ## How to Run Experiments
-
+### AN ILLUSTRATION: Random Walk
+> The script below runs a new test on the Random Walk environment with customized settings.
 ```
 python RandomWalk.py -h
 
@@ -42,7 +49,8 @@ optional arguments:
   --d D                debug_level; default 0 0:nothing print 1:print average result over runs, 2:print result after end of each episode, 3:print all information, like actions and reward in each state
   --save_dir SAVE_DIR  Save Directory; default ./Results/RandomWalk/
 ```
-
+### OPTIMAL CONTROL PROBLEMS WITH CONSTRAINTS: Optimal Temperature Control with Constraint
+> The script below runs a new test on the Optimal Temperature Control with Constraint environment with customized settings.
 ```
 python Optimal_Temperature_Control_with_Constraint.py -h
 
@@ -58,7 +66,8 @@ optional arguments:
   --save_dir SAVE_DIR  Save Directory; default ./Results/Temperature_Control/
   --d [D ...]          debug_level; default False False:nothing print True:print result per each episode
 ```
-
+### OPTIMAL CONTROL PROBLEMS WITH CONSTRAINTS: A Coupled Four Tank MIMO System
+> The script below runs a new test on the Coupled Four Tank MIMO System environment with customized settings.
 ```
 python A_Coupled_Four_Tank_MIMO_System.py -h
 
@@ -73,4 +82,42 @@ optional arguments:
   --w W                omega, weighting values to the control objective; default 1
   --save_dir SAVE_DIR  Save Directory; default ./Results/Four_Tank/
   --d [D ...]          debug_level; default False False:nothing print True:print result per each episode
+```
+# Examples
+
+> The script
+```
+python plot_results.py --Env RW --O_RT True --O_RA True --input_dir ./Results/RandomWalk/RW_s5_r100_e100.csv --save_dir ./Results/RandomWalk/ 
+python plot_results.py --Env RW --O_RT True --O_RA False --input_dir ./Results/RandomWalk/RW_s11_r100_e150.csv --save_dir ./Results/RandomWalk/ 
+python plot_results.py --Env RW --O_RT True --O_RA False --input_dir ./Results/RandomWalk/RW_s33_r100_e500.csv --save_dir ./Results/RandomWalk/ 
+```
+> The script
+```
+python plot_results.py --Env TC --x_min 0 --x_max 8000 --TA_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega100_beta1.0_E4000.csv --baseline_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega100_beta0.0_E4000.csv --save_dir ./Results/Temperature_Control/
+python plot_results.py --Env TC --x_min 0 --x_max 5000  --TA_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega10_beta1.0_E4000.csv --baseline_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega10_beta0.0_E4000.csv --save_dir ./Results/Temperature_Control/
+python plot_results.py --Env TC --x_min 0 --x_max 1200 --TA_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta1.0_E4000.csv --baseline_dir ./Results/Temperature_Control/Temperature_Control_e8000_omega1_beta0.0_E4000.csv --save_dir ./Results/Temperature_Control/
+```
+> The script
+```
+python plot_results.py --Env FT  --x_min 0 --x_max 30000 --TA_dir ./Results/Four_Tank/Four_Tank_e30000_omega1_beta0.5_E3000.csv --baseline_dir ./Results/Four_Tank/Four_Tank_e30000_omega1_beta0.0_E3000.csv --save_dir ./Results/Four_Tank/ 
+```
+> The script
+```
+python RandomWalk.py --N 7 --E 100 --R 100 --b 0 1 100 --l 0.1 0.5 0.9 --d 0 --save_dir ./Results/RandomWalk/
+python RandomWalk.py --N 11 --E 150 --R 100 --b 0 1 100 --l 0.1 0.5 0.9 --d 0 --save_dir ./Results/RandomWalk/
+python RandomWalk.py --N 33 --E 500 --R 100 --b 0 1 --l 0.1 0.5 --d 0 --save_dir ./Results/RandomWalk/
+```
+> The script
+```
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 1 --E 4000 --w 1 --d False --save_dir ./Results/Temperature_Control/
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 0 --E 4000 --w 1 --d False --save_dir ./Results/Temperature_Control/
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 1 --E 4000 --w 10 --d False --save_dir ./Results/Temperature_Control/
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 0 --E 4000 --w 10 --d False --save_dir ./Results/Temperature_Control/
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 1 --E 4000 --w 100 --d False --save_dir ./Results/Temperature_Control/
+python Optimal_Temperature_Control_with_Constraint.py --e 8000 --b 0 --E 4000 --w 100 --d False --save_dir ./Results/Temperature_Control/
+```
+> The script
+```
+python A_Coupled_Four_Tank_MIMO_System.py --e 30000 --b 0.5 --E 3000 --w 1 --d False --save_dir ./Results/Four_Tank/
+python A_Coupled_Four_Tank_MIMO_System.py --e 30000 --b 0 --E 3000 --w 1 --d False --save_dir ./Results/Four_Tank/
 ```
