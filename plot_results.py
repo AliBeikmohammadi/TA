@@ -51,13 +51,13 @@ arg_pass.add_argument(
   "--O_RT",
   nargs='*', help='Plot O_RT; default False',
   type=str2bool, 
-  default=False,
+  default=[False],
 )
 arg_pass.add_argument(
   "--O_RA",
   nargs='*', help='Plot O_RA; default False',
   type=str2bool,  
-  default=False,
+  default=[False],
 )
 
 arg_pass.add_argument(
