@@ -62,10 +62,13 @@ debug_level= args.d
 save_results= args.save_dir
 
 Alpha=[0.1] 
-initial_values= np.append(0,np.append(np.random.randn(NumberOfTotalStates-2),0))  # samples from the standard normal distribution
 main_reward=1    #R^T 
 assistant_reward=1  #R^A
 adaptive_beta= True
+initial_values= np.append(0,np.append(np.random.randn(NumberOfTotalStates-2),0))  # samples from the standard normal distribution (same for all runs)
+# def initial_values(NumberOfTotalStates): # samples from the standard normal distribution (different for each run)
+#     iv= np.append(0,np.append(np.random.randn(NumberOfTotalStates-2),0))  # samples from the standard normal distribution
+#     return iv
 
 print ('debug_level:', debug_level, 
       '\nNumberOfTotalStates:', NumberOfTotalStates, '\nN_episodes:', N_episodes, '\nN_run:', N_run, 
@@ -142,7 +145,8 @@ for c in range(len(cut)):
     for i in range(len(initial_beta)):
         for a in range(len(Alpha)):
             for n in range(N_run):
-                value_estimates = np.copy(initial_values)
+                #value_estimates = initial_values(NumberOfTotalStates) #different random values in each run
+                value_estimates = np.copy(initial_values) #same random values in all runs
                 betas = []
                 for episode in range(N_episodes):
                     if adaptive_beta:
