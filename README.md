@@ -1,7 +1,7 @@
 # TA-Explore
 Implementation of **TA-Explore**, as presented in TA-Explore: Teacher-Assisted Exploration for Facilitating Fast Reinforcement Learning.
 
-*Submitted to the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (SIGKDD2022)
+* Submitted to the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (SIGKDD2022)
 
 # Importing
 
